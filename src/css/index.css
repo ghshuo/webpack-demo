@@ -1,0 +1,9 @@
+body{
+    background-color: red;
+    color: white;
+}
+#phoneImg{
+    background-image: url(../images/timg.jpg);
+    width: 350px;
+    height: 387px;
+}
