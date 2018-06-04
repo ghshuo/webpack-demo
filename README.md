@@ -36,7 +36,7 @@ npm install webpack --save-dev
 }
 
 ```
-### 2.module模块 
+### 3.module模块 
 #### 解读css
 安装
 ```
@@ -132,7 +132,7 @@ devServer:{
 }
 
 ```
-### CSS分离与图片路径处理
+### 6.CSS分离与图片路径处理
  把CSS单独提取出来，分离css
 
 ```	
@@ -168,7 +168,138 @@ var filePath = {
 
 ```
 
+## 安装css预编译语言
+### 1.less 
+```
+npm install --save-dev less
+npm install --save-dev less-loader
+```
+webpack.config.js
+配置less
+```js
+{
+    test: /\.less$/,
+    use: [{
+           loader: "style-loader" 
+        }, {
+            loader: "css-loader" 
+        , {
+            loader: "less-loader"
+        }]
+}
+
+```
+less 分离
+```js
+npm n install --save-dev extract-text-webpack-plugin
+const extractTextPlugin = require("extract-text-webpack-plugin");
+plugins[
+  new extractTextPlugin("/css/index.css")
+]
+
+use:extractTextPlugin.extract({
+    use:[{
+        loader:'css-loader'
+    },{
+            loader:'less-loader'
+        }],
+    fallback:'style-loader'
+})
+```
+### 2.sass
+
+```js
+npm install --save-dev node-sass
+npm install --save-dev sass-loader
+```
+```js
+{
+    test: /\.scss$/,
+    use: extractTextPlugin.extract({
+        use: [{
+            loader: "css-loader"
+        }, {
+            loader: "sass-loader"
+        }],
+        fallback: "style-loader"
+    })
+}
+```
+## 自动处理css3属性前戳
+
+需要安装两个包postcss-loader 和autoprefixer（自动添加前缀的插件）
+```	
+npm n install --save-dev postcss-loader autoprefixer
+```
+在webpack.config.js同级目录下新建一个postcss.config.js文件
+```js
+module.exports = {
+    plugins: [
+        require('autoprefixer')
+    ]
+}
+```
+loader配置
+```js
+{
+    test: /\.css$/,
+    use: extractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+            { loader: 'css-loader', options: { importLoaders: 1 } },
+            'postcss-loader'
+        ]
+    })
+    
+}
+```
+## 消除未使用的CSS
+
+安装PurifyCSS-webpack
+```
+npm i -D purifycss-webpack purify-css
+```
+引入glob
+因为我们需要同步检查html模板，所以我们需要引入node的glob对象使用。在webpack.config.js文件头部引入glob。
+```css
+constc  glob = require('glob');
+```
+引入purifycss-webapck
+```css
+constc  PurifyCSSPlugin = require("purifycss-webpack");
+```
+配置plugins
+```js
+new PurifyCSSPlugin({
+    paths: glob.sync(path.join(__dirname, 'src/*.html')),
+})
+```
+
+## babel
+
+```
+npm i -D babel-loader babel-core babel-preset-env babel-polyfill
+```
+module中配置
+```
+{
+    test:/\.(jsx|js)$/,
+    use:{
+        loader:'babel-loader',
+    },
+    exclude:/node_modules/
+}
+```
+配置babel预设文件
+在根目录下创建一个.babelrc文件
+```
+{
+  "presets": ["env"]
+}
+```
+
+
 ## 打包命令
-npm run dev 
+webpack 
 ## 运行
 npm run server
