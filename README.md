@@ -450,33 +450,6 @@ var json =require('../config.json');
 document.getElementById("json").innerHTML= json.name;
 
 ```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-```
-```
-
-
-
 ## 打包命令
 webpack
 ## 运行
